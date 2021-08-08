@@ -9,9 +9,10 @@ public class Article {
 	private String regDate;
 	private int hit;
 	private String nickname;
+	private int rcnt;
 	
 
-	public Article(int id, String title, String body, int memberId, String regDate, int hit, String nickname) {
+	public Article(int id, String title, String body, int memberId, String regDate, int hit, String nickname, int rcnt) {
 		super();
 		this.id = id;
 		this.title = title;
@@ -20,8 +21,21 @@ public class Article {
 		this.regDate = regDate;
 		this.hit = hit;
 		this.nickname = nickname;
+		this.rcnt = rcnt;
 	}
 	
+	public int getRcnt() {
+		return rcnt;
+	}
+
+
+
+	public void setRcnt(int rcnt) {
+		this.rcnt = rcnt;
+	}
+
+
+
 	public String getNickname() {
 		return nickname;
 	}

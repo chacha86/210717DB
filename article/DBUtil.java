@@ -37,10 +37,13 @@ public class DBUtil {
 			Connection conn = getConnection();
 			Statement stmt = conn.createStatement();
 			
-			String sql = "SELECT a.*, m.nickname "
+			String sql = "SELECT a.*, m.nickname, COUNT(ar.id) rcnt "
 					+ "FROM article a "
 					+ "INNER JOIN `member` m "
-					+ "ON a.memberId = m.id";
+					+ "ON a.memberId = m.id "
+					+ "LEFT OUTER JOIN articleReply ar "
+					+ "ON a.id = ar.parentId "
+					+ "GROUP BY a.id";
 			ResultSet rs = stmt.executeQuery(sql);
 			
 			while(rs.next()) {
@@ -52,8 +55,9 @@ public class DBUtil {
 				String regDate = rs.getString("regDate");
 				int hit = rs.getInt("hit");
 				String nickname = rs.getString("nickname");
+				int rcnt = rs.getInt("rcnt");
 				
-				Article a = new Article(id, title, body, memberId, regDate, hit, nickname);				
+				Article a = new Article(id, title, body, memberId, regDate, hit, nickname, rcnt);				
 				
 				articles.add(a);
 			}
@@ -92,7 +96,7 @@ public class DBUtil {
 				int hit = rs.getInt("hit");
 				String nickname = rs.getString("nickname");
 				
-				a = new Article(aid, title, body, memberId, regDate, hit, nickname);
+				a = new Article(aid, title, body, memberId, regDate, hit, nickname, 0);
 			}
 		} catch(Exception e) {
 			System.out.println("문제 발생!!");
