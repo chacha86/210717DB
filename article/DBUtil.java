@@ -36,7 +36,12 @@ public class DBUtil {
 		try {
 			Connection conn = getConnection();
 			Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery("select * from article");
+			
+			String sql = "SELECT a.*, m.nickname "
+					+ "FROM article a "
+					+ "INNER JOIN `member` m "
+					+ "ON a.memberId = m.id";
+			ResultSet rs = stmt.executeQuery(sql);
 			
 			while(rs.next()) {
 				
@@ -46,8 +51,9 @@ public class DBUtil {
 				int memberId = rs.getInt("memberId");
 				String regDate = rs.getString("regDate");
 				int hit = rs.getInt("hit");
+				String nickname = rs.getString("nickname");
 				
-				Article a = new Article(id, title, body, memberId, regDate, hit);				
+				Article a = new Article(id, title, body, memberId, regDate, hit, nickname);				
 				
 				articles.add(a);
 			}
@@ -68,7 +74,13 @@ public class DBUtil {
 		try {			
 			Connection conn = getConnection();
 			Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery("select * from article where id = " + id);
+			String sql = "SELECT a.*, m.nickname "
+					+ "FROM article a "
+					+ "INNER JOIN `member` m "
+					+ "ON a.memberId = m.id "
+					+ "WHERE a.id = " + id;
+			
+			ResultSet rs = stmt.executeQuery(sql);
 			
 			if(rs.next()) {
 				
@@ -78,8 +90,9 @@ public class DBUtil {
 				int memberId = rs.getInt("memberId");
 				String regDate = rs.getString("regDate");
 				int hit = rs.getInt("hit");
+				String nickname = rs.getString("nickname");
 				
-				a = new Article(aid, title, body, memberId, regDate, hit);
+				a = new Article(aid, title, body, memberId, regDate, hit, nickname);
 			}
 		} catch(Exception e) {
 			System.out.println("문제 발생!!");
@@ -87,4 +100,75 @@ public class DBUtil {
 			
 		return a;
 	}
+	
+	// 4. 수정
+	public void updateArticle(String title, String body, String id) {
+		
+		try {			
+			Connection conn = getConnection();
+			Statement stmt = conn.createStatement();
+			String sql = "UPDATE article " + 
+					"SET title = '" + title + "', " +
+					"`body` = '" + body + "' " +
+					"WHERE id = " + id;
+			
+			stmt.executeUpdate(sql);
+		} catch(Exception e) {
+			System.out.println("문제 발생");
+		}
+	}
+	
+	// 5. 삭제
+	public void deleteArticle(String id) {
+		
+		try {			
+			Connection conn = getConnection();
+			Statement stmt = conn.createStatement();
+			String sql = "DELETE FROM article " + 
+					    "WHERE id = " + id;
+			
+			stmt.executeUpdate(sql);
+		} catch(Exception e) {
+			System.out.println("문제 발생");
+		}
+	} 
+	
+	// 6. 댓글 목록 가져오기
+	public ArrayList<Reply> getArticleReplyByArticleId(int aid) {
+		
+		ArrayList<Reply> replies = new ArrayList<Reply>(); 
+		
+		try {
+			Connection conn = getConnection();
+			Statement stmt = conn.createStatement();
+			
+			String sql = "SELECT ar.*, m.nickname "
+					+ "FROM articleReply ar "
+					+ "INNER JOIN `member` m "
+					+ "ON ar.memberId = m.id "
+					+ "WHERE parentId = " + aid;
+			ResultSet rs = stmt.executeQuery(sql);
+			
+			while(rs.next()) {
+				
+				int id = rs.getInt("id");
+				int parentId = rs.getInt("parentId");
+				String body = rs.getString("body");
+				int memberId = rs.getInt("memberId");
+				String regDate = rs.getString("regDate");
+				String nickname = rs.getString("nickname");
+				
+				Reply r = new Reply(id, parentId, body, memberId, regDate, nickname);				
+				
+				replies.add(r);
+			}
+		} catch(Exception e) {
+			System.out.println("문제 발생!!");
+		}
+		
+		
+		return replies;
+	}
+	
+	
 }

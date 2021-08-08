@@ -1,27 +1,64 @@
 package article;
-// DTO, VO
-public class Article {
+
+public class Reply {
 
 	private int id;
-	private String title;
+	private int parentId;
 	private String body;
 	private int memberId;
 	private String regDate;
-	private int hit;
 	private String nickname;
 	
-
-	public Article(int id, String title, String body, int memberId, String regDate, int hit, String nickname) {
+	public Reply(int id, int parentId, String body, int memberId, String regDate, String nickname) {
 		super();
 		this.id = id;
-		this.title = title;
+		this.parentId = parentId;
 		this.body = body;
 		this.memberId = memberId;
 		this.regDate = regDate;
-		this.hit = hit;
 		this.nickname = nickname;
 	}
-	
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public int getParentId() {
+		return parentId;
+	}
+
+	public void setParentId(int parentId) {
+		this.parentId = parentId;
+	}
+
+	public String getBody() {
+		return body;
+	}
+
+	public void setBody(String body) {
+		this.body = body;
+	}
+
+	public int getMemberId() {
+		return memberId;
+	}
+
+	public void setMemberId(int memberId) {
+		this.memberId = memberId;
+	}
+
+	public String getRegDate() {
+		return regDate;
+	}
+
+	public void setRegDate(String regDate) {
+		this.regDate = regDate;
+	}
+
 	public String getNickname() {
 		return nickname;
 	}
@@ -30,40 +67,4 @@ public class Article {
 		this.nickname = nickname;
 	}
 
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
-	public String getTitle() {
-		return title;
-	}
-	public void setTitle(String title) {
-		this.title = title;
-	}
-	public String getBody() {
-		return body;
-	}
-	public void setBody(String body) {
-		this.body = body;
-	}
-	public int getMemberId() {
-		return memberId;
-	}
-	public void setMemberId(int memberId) {
-		this.memberId = memberId;
-	}
-	public String getRegDate() {
-		return regDate;
-	}
-	public void setRegDate(String regDate) {
-		this.regDate = regDate;
-	}
-	public int getHit() {
-		return hit;
-	}
-	public void setHit(int hit) {
-		this.hit = hit;
-	}	
 }
