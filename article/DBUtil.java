@@ -170,5 +170,22 @@ public class DBUtil {
 		return replies;
 	}
 	
-	
+	// 7.댓글 저장 
+	public void addReply(String rbody, String aid) {
+		
+		try {
+			Connection conn = getConnection();
+			Statement stmt = conn.createStatement();
+			
+			String sql = "INSERT INTO articleReply "
+					+ "SET parentId = " + aid + ", "
+					+ "`body` = '" + rbody + "', "
+					+ "memberId = 1, "
+					+ "regDate = NOW()";
+			
+			stmt.executeUpdate(sql);			
+		} catch(Exception e) {
+			System.out.println("댓글 등록 중 문제 발생");
+		}
+	}
 }

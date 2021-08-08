@@ -55,5 +55,16 @@
 <%
 }
 %>
+<form action="/web-example2/addReply.jsp">
+	<div>
+		<div>홍길동</div>
+		<div>
+			<input type="text" name="rbody" placeholder="댓글을 남겨보세요"/>
+			<input type="hidden" name="aid" value="<%= article.getId() %>"/>
+		</div>
+		<div><input type="submit" value="등록"></div>
+	</div>
+</form>
+
 </body>
 </html>
