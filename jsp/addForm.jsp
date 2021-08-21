@@ -8,6 +8,7 @@
 </head>
 <body>
 <h1>게시물 등록</h1>
+<% //공통코드 %>
 
 <form action="/web-example2/addArticle.jsp">
 	<div>
