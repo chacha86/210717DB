@@ -4,6 +4,7 @@
 <%@ page import="article.Article" %>
 <%@ page import="article.Reply" %>
 <%@ page import="java.util.ArrayList" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -15,52 +16,41 @@
 </head>
 <body>
 <h1>게시물 상세</h1>
-<%	
-	String id = request.getParameter("id");
-	DBUtil db = new DBUtil();
-	Article article = db.getArticleById(id);
-	//DBUtil 이용해서 댓글리스트 가져오기.
-	
-	ArrayList<Reply> replies = db.getArticleReplyByArticleId(article.getId());
-	
-%>
 <div>
-	<span>번호 : <%= article.getId() %></span>
+	<span>번호 : ${ article.id }</span>
 </div>
 <hr>
 <div>
-	<span>제목 : <%= article.getTitle() %></span>
+	<span>제목 : ${ article.title }</span>
 </div>
 <hr>
 <div>
-	<span>작성자 : <%= article.getNickname() %></span>
+	<span>작성자 : ${ article.nickname }</span>
 </div>
 <hr>
 <div>
 	<span>내용 : </span>
-	<div><%= article.getBody() %></div>
+	<div>${ article.body }</div>
 </div>
 <hr>
-<a href="/web-example2/updateForm.jsp?id=<%= article.getId() %>">수정</a>
-<a href="/web-example2/deleteArticle.jsp?id=<%= article.getId() %>">삭제</a>
+<a href="/web-example2/updateForm.jsp?id=${ article.id }">수정</a>
+<a href="/web-example2/deleteArticle.jsp?id=${ article.id }">삭제</a>
 
 <h3>댓글</h3>
-<% for(int i = 0; i < replies.size(); i++) { %>
+<c:forEach items="${ replies }" var="reply">
 <div>
-	<div>작성자 : <%=  replies.get(i).getNickname() %> </div>
-	<div>내용 : <%=  replies.get(i).getBody() %> </div>
-	<div>작성일 : <%=  replies.get(i).getRegDate() %></div>
+	<div>작성자 : ${reply.nickname} </div>
+	<div>내용 : ${ reply.body } </div>
+	<div>작성일 : ${ reply.regDate }</div>
 </div>
 <hr>
-<%
-}
-%>
+</c:forEach>
 <form action="/web-example2/addReply.jsp">
 	<div>
 		<div>홍길동</div>
 		<div>
 			<input type="text" name="rbody" placeholder="댓글을 남겨보세요"/>
-			<input type="hidden" name="aid" value="<%= article.getId() %>"/>
+			<input type="hidden" name="aid" value="${ article.id }"/>
 		</div>
 		<div><input type="submit" value="등록"></div>
 	</div>

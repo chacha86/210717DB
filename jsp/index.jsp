@@ -40,7 +40,7 @@
     <c:forEach items="${articles}" var="article">
 	<div>
 		<div class="col">${article.id}</div>
-		<div class="col title"><a href="/detail.jsp?id=${article.id}">${article.title}[${article.rcnt}]</a></div>
+		<div class="col title"><a href="/article?action=detail&id=${article.id}">${article.title}[${article.rcnt}]</a></div>
 		<div class="col">${article.nickname}</div>
 		<div class="col regDate">${article.regDate}</div>
 		<div class="col">${article.hit}</div>
