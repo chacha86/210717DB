@@ -10,7 +10,7 @@
 <h1>게시물 등록</h1>
 <% //공통코드 %>
 
-<form action="/web-example2/addArticle.jsp">
+<form action="/article/add.do">
 	<div>
 		<input type="text" name="title" placeholder="제목을 입력해주세요."/>
 	</div>

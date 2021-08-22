@@ -48,6 +48,6 @@
 	</div>
 	<hr>
     </c:forEach>
-	<a href="/addForm.jsp">글쓰기</a>
+	<a href="/article/showAdd.do">글쓰기</a>
 </body>
 </html>

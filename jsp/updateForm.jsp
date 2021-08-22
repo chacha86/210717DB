@@ -11,20 +11,18 @@
 <body>
 <h1>수정페이지</h1>
 <%
-	String id = request.getParameter("id");
-	DBUtil db = new DBUtil();
-	Article article = db.getArticleById(id);
+	
 %>
 
-<form action="/web-example2/updateArticle.jsp">
+<form action="/article/update.do">
 	<div>
-		<input type="hidden" name="id" value="<%= article.getId() %>" />
+		<input type="hidden" name="id" value="${ article.id }" />
 	</div>
 	<div>
-		<input type="text" name="title" value="<%= article.getTitle() %>"/>
+		<input type="text" name="title" value="${ article.title }"/>
 	</div>
 	<div>
-		<textarea name="body" cols="25" rows="10"><%= article.getBody() %></textarea>
+		<textarea name="body" cols="25" rows="10">${ article.body }</textarea>
 	</div>
 	<div>
 		<input type="submit"> 

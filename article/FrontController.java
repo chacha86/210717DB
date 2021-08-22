@@ -21,22 +21,13 @@ public class FrontController extends HttpServlet {
 		response.setCharacterEncoding("utf-8");
 		request.setCharacterEncoding("utf-8");
 		response.setContentType("text/html; charset=utf-8");
-		
-		// 3. DB에서 게시물 목록 가져와서
+
 		DBUtil db = new DBUtil();
 		
-		//String action = request.getParameter("action");
-		
-		// 주소 정보 가져오기 -> URL == URI
 		String uri = request.getRequestURI();
-		System.out.println("자르기 전 : " + uri);
-		
 		// split - 문자열을 구분자를 정해서 자를 수 있다.
 		String[] uriBits = uri.split("/");
 		
-//		for(int i = 0; i < uriBits.length; i++) {
-//			System.out.println(uriBits[i]);
-//		}
 		String action = uriBits[2];
 		
 		if(action.equals("list.do")) {
@@ -63,9 +54,43 @@ public class FrontController extends HttpServlet {
 			RequestDispatcher rd = request.getRequestDispatcher("/detail.jsp");
 			rd.forward(request, response);
 		}
-		
-		
-		
+		else if(action.equals("showUpdate.do")) {
+			String id = request.getParameter("id");
+			Article article = db.getArticleById(id);
+			request.setAttribute("article", article);
+			
+			RequestDispatcher rd = request.getRequestDispatcher("/updateForm.jsp");
+			rd.forward(request, response);
+		}
+		else if(action.equals("update.do")) {
+			String title = request.getParameter("title");
+			String body = request.getParameter("body");
+			String id = request.getParameter("id");
+			
+			db.updateArticle(title, body, id);
+			
+			// 포워딩 : 요청 처리 위임. A에서 작업한 요청 결과를 B에 전달. B가 마무리.
+			// 리다이렉트 : 새로운 요청. A에서 작업한 결과 싹다 무시. B에 새로운 요청
+			
+			response.sendRedirect("/article/detail.do?id=" + id);
+		}
+		else if(action.equals("delete.do")) {
+			String id = request.getParameter("id");
+			
+			db.deleteArticle(id);
+			response.sendRedirect("/article/list.do");
+		}
+		else if(action.equals("showAdd.do")) {
+			RequestDispatcher rd = request.getRequestDispatcher("/addForm.jsp");
+			rd.forward(request, response);
+		}
+		else if(action.equals("add.do")) {
+			String title = request.getParameter("title");
+			String body = request.getParameter("body");
+			
+			db.addArticle(title, body);
+			response.sendRedirect("/article/list.do");
+		}
 		
 	}
 

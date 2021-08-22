@@ -10,12 +10,7 @@
 <body>
 <%
 	DBUtil db = new DBUtil();
-	String title = request.getParameter("title");
-	String body = request.getParameter("body");
-	String id = request.getParameter("id");
 	
-	db.updateArticle(title, body, id);
-	response.sendRedirect("/web-example2/detail.jsp?id=" + id);
 %>
 
 </body>

@@ -2,10 +2,9 @@ package article;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-
-import com.mysql.cj.protocol.x.SyncFlushDeflaterOutputStream;
 
 public class DBUtil {
 
@@ -190,6 +189,27 @@ public class DBUtil {
 			stmt.executeUpdate(sql);			
 		} catch(Exception e) {
 			System.out.println("댓글 등록 중 문제 발생");
+		}
+	}
+	
+	// 8. 게시물 추가
+	public void addArticle(String title, String body) {
+
+		try {
+			
+			Connection conn = getConnection();
+			Statement stmt = conn.createStatement();
+			
+			String sql = "INSERT INTO article " +
+					"SET title = '" + title + "', " +
+					"`body` = '" + body + "', " +
+					"memberId = 1, " +
+					"regDate = NOW(), " +
+					"hit = 0 ";
+			
+			stmt.executeUpdate(sql);
+		} catch(Exception e) {
+			System.out.println("게시물 추가 중 문제 발생!!");
 		}
 	}
 }

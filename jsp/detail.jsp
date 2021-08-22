@@ -33,8 +33,8 @@
 	<div>${ article.body }</div>
 </div>
 <hr>
-<a href="/web-example2/updateForm.jsp?id=${ article.id }">수정</a>
-<a href="/web-example2/deleteArticle.jsp?id=${ article.id }">삭제</a>
+<a href="/article/showUpdate.do?id=${ article.id }">수정</a>
+<a href="/article/delete.do?id=${ article.id }">삭제</a>
 
 <h3>댓글</h3>
 <c:forEach items="${ replies }" var="reply">
