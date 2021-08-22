@@ -1,3 +1,3 @@
 git add .
-git commit -m "Model2 ë°©ì‹ì—ì„œ ë°ì´í„° ì²˜ë¦¬í•˜ê³  í‘œì¶œí•˜ê¸°"
+git commit -m "¿äÃ» ±¸ºĞÀ» URI ¹æ½ÄÀ¸·Î ¹Ù²Ù±â. »ó´ë°æ·Î¿Í Àı´ë°æ·Î"
 git push origin master
