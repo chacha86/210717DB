@@ -26,6 +26,8 @@
 }
 </style>
 
+<a href="/article/showMember.do">회원가입</a>
+
 <h1>게시물 목록</h1>
 
 <body>

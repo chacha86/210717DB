@@ -13,11 +13,7 @@
     // 공통코드
     
 	DBUtil db = new DBUtil();
-	String rbody = request.getParameter("rbody");
-	String aid = request.getParameter("aid");
 	
-	db.addReply(rbody, aid);
-	response.sendRedirect("/web-example2/detail.jsp?id=" + aid);
 	
 %>
 </body>

@@ -91,7 +91,26 @@ public class FrontController extends HttpServlet {
 			db.addArticle(title, body);
 			response.sendRedirect("/article/list.do");
 		}
-		
+		else if(action.equals("addReply.do")) {
+			String rbody = request.getParameter("rbody");
+			String aid = request.getParameter("aid");
+			
+			db.addReply(rbody, aid);
+			
+			response.sendRedirect("/article/detail.do?id=" + aid);
+		}
+		else if(action.equals("showMember.do")) {
+			RequestDispatcher rd = request.getRequestDispatcher("/addMemberForm.jsp");
+			rd.forward(request, response);
+		}
+		else if(action.equals("addMember.do")) {
+			String loginId = request.getParameter("loginId");
+			String loginPw = request.getParameter("loginPw");
+			String nickname = request.getParameter("nickname");
+			
+			db.addMember(loginId, loginPw, nickname);
+			response.sendRedirect("/article/list.do");
+		}
 	}
 
 }

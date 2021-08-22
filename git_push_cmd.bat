@@ -1,3 +1,3 @@
 git add .
-git commit -m "요청 구분을 URI 방식으로 바꾸기. 상대경로와 절대경로"
+git commit -m "회원가입 기능 추가"
 git push origin master

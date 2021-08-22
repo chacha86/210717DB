@@ -45,7 +45,7 @@
 </div>
 <hr>
 </c:forEach>
-<form action="/web-example2/addReply.jsp">
+<form action="/article/addReply.do">
 	<div>
 		<div>홍길동</div>
 		<div>
