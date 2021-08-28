@@ -17,6 +17,9 @@
 	<div>
 		<textarea name="body" placeholder="내용을 입력해주세요." cols="25" rows="10"></textarea>
 	</div>
+    <div>
+        작성자 : ${ loginUser }
+    </div>
 	<div>
 		<input type="submit"> 
 	</div>
