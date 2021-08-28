@@ -26,7 +26,7 @@
 }
 </style>
 
-<a href="/article/showMember.do">회원가입</a>
+<a href="/article/showMember.do">회원가입</a> ${ loginUser }님 안녕하세요!!<a href="/article/showLogin.do">로그인</a>
 
 <h1>게시물 목록</h1>
 
@@ -38,7 +38,6 @@
 	<div class="col">조회수</div>
 	<div class="col">좋아요</div>
 	<hr>
-
     <c:forEach items="${articles}" var="article">
 	<div>
 		<div class="col">${article.id}</div>

@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 
 @WebServlet("*.do")
 public class FrontController extends HttpServlet {
-
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		// 1. 인코딩 설정
@@ -39,11 +38,10 @@ public class FrontController extends HttpServlet {
 			// 경로 :
 			// 절대경로 : root 경로를 기준으로 목적지 찾는 방식 (/detail.jsp)
 			// 상대경로 : 현재 경로 기준으로 목적지 찾는 방식 (detail.jsp)
-			
 			RequestDispatcher rd = request.getRequestDispatcher("/index.jsp");
 			rd.forward(request, response);			
 		}
-		else if(action.equals("detail.do")) {			
+		else if(action.equals("detail.do")) {
 			String id = request.getParameter("id");
 			Article article = db.getArticleById(id);
 			ArrayList<Reply> replies = db.getArticleReplyByArticleId(article.getId());
@@ -110,6 +108,38 @@ public class FrontController extends HttpServlet {
 			
 			db.addMember(loginId, loginPw, nickname);
 			response.sendRedirect("/article/list.do");
+		}
+		else if(action.equals("showLogin.do")) {
+			RequestDispatcher rd = request.getRequestDispatcher("/loginForm.jsp");
+			rd.forward(request, response);
+		}
+		else if(action.equals("login.do")) {
+			
+			// 로그인을 시도하는 유저의 로그인 정보를 파라미터로 받아서 DB에 있는지 체크
+			String loginId = request.getParameter("loginId");
+			String loginPw = request.getParameter("loginPw");
+			
+			Member m = db.getMemberByLoginIdAndLoginPw(loginId, loginPw);
+			
+			// 로그인 성공
+			if(m != null) {
+				request.setAttribute("loginUser", m.getNickname());
+
+				ArrayList<Article> articles = db.getArticleList();
+				request.setAttribute("articles", articles);
+				
+				RequestDispatcher rd = request.getRequestDispatcher("/index.jsp");
+				rd.forward(request, response);
+				
+			}
+			// 로그인 실패
+			else {
+				request.setAttribute("errorMsg", "로그인 실패. 잘못된 회원정보입니다.");
+				
+				RequestDispatcher rd = request.getRequestDispatcher("/error.jsp");
+				rd.forward(request, response); 
+			}
+			
 		}
 	}
 
