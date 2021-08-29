@@ -89,9 +89,21 @@ public class FrontController extends HttpServlet {
 		else if(action.equals("showAdd.do")) {
 			
 			// 로그인 체크
+			
+			HttpSession session = request.getSession();
+			String user = (String)session.getAttribute("loginUser");
+			
+			if(user != null) {
+				RequestDispatcher rd = request.getRequestDispatcher("/addForm.jsp");
+				rd.forward(request, response);								
+			}
+			else {
+
+				RequestDispatcher rd = request.getRequestDispatcher("/error.jsp");
+				rd.forward(request, response);
+			}
+			
 		
-			RequestDispatcher rd = request.getRequestDispatcher("/addForm.jsp");
-			rd.forward(request, response);				
 		}
 		else if(action.equals("add.do")) {
 			String title = request.getParameter("title");
