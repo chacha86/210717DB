@@ -78,6 +78,9 @@ public class FrontController extends HttpServlet {
 			response.sendRedirect("/article/detail.do?id=" + id);
 		}
 		else if(action.equals("delete.do")) {
+			
+			// 로그인 체크
+			
 			String id = request.getParameter("id");
 			
 			db.deleteArticle(id);
@@ -85,7 +88,7 @@ public class FrontController extends HttpServlet {
 		}
 		else if(action.equals("showAdd.do")) {
 			
-			// 로그인 되어 있을 때만
+			// 로그인 체크
 		
 			RequestDispatcher rd = request.getRequestDispatcher("/addForm.jsp");
 			rd.forward(request, response);				
@@ -132,9 +135,11 @@ public class FrontController extends HttpServlet {
 			// 로그인 성공
 			if(m != null) {
 				
+				// request 저장소는 하나의 요청 처리에 대해 동일한 데이터를 저장하고 제공한다.				
+				// session 저장소는 모든 요청 처리에 대해 동일한 데이터를 저장하고 제공한다.
+				
 				// session 저장소에 로그인 정보를 저장.
 				HttpSession session = request.getSession();
-				
 				session.setAttribute("loginUser", m.getNickname());				
 				
 				ArrayList<Article> articles = db.getArticleList();
@@ -151,7 +156,16 @@ public class FrontController extends HttpServlet {
 				RequestDispatcher rd = request.getRequestDispatcher("/error.jsp");
 				rd.forward(request, response); 
 			}
+		}
+		else if(action.equals("logout.do")) {
+			HttpSession session = request.getSession();
+			session.invalidate(); // session에 저장된 모든 데이터 삭제
 			
+			ArrayList<Article> articles = db.getArticleList();
+			request.setAttribute("articles", articles);
+			
+			RequestDispatcher rd = request.getRequestDispatcher("/index.jsp");
+			rd.forward(request, response);
 		}
 	}
 

@@ -30,5 +30,39 @@
 </c:forEach>
 
 
+<%
+ 
+  request.setAttribute("num", 3);
+
+%>
+
+<c:choose>
+  <c:when test="${ num == 1 }">
+    참!!
+  </c:when>
+  <c:otherwise>
+    거짓!!
+  </c:otherwise>
+</c:choose>
+
+<c:choose>
+  <c:when test="${ num < 2 }">
+    2보다 작습니다.
+  </c:when>
+  
+  <c:when test="${ num < 5 }">
+    5보다 작습니다.
+  </c:when>
+  
+  <c:when test="${ num < 10 }">
+    10보다 작습니다.
+  </c:when>
+  
+  <c:otherwise>
+    10보다 크거나 같습니다.
+  </c:otherwise>
+</c:choose>
+
+
 </body>
 </html>

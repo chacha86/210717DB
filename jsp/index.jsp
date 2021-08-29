@@ -25,7 +25,22 @@
 	width: 100px;
 }
 </style>
-<a href="/article/showMember.do">회원가입</a> ${ sessionScope.loginUser }님 안녕하세요!!<a href="/article/showLogin.do">로그인</a>
+
+<!-- 로그인 했을 때 나와야 되는 것 -->
+<c:choose>
+  <c:when test="${ sessionScope.loginUser != null}">
+     <div>
+       ${ sessionScope.loginUser }님 안녕하세요!!
+       <a href="/article/logout.do">로그아웃</a>
+     </div>
+  </c:when>
+  <c:otherwise>
+    <div>
+      <a href="/article/showMember.do">회원가입</a> 
+      <a href="/article/showLogin.do">로그인</a>
+    </div>
+  </c:otherwise>
+</c:choose>
 
 <h1>게시물 목록</h1>
 
