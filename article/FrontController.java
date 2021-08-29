@@ -9,6 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 
 @WebServlet("*.do")
@@ -41,12 +42,6 @@ public class FrontController extends HttpServlet {
 			// 경로 :
 			// 절대경로 : root 경로를 기준으로 목적지 찾는 방식 (/detail.jsp)
 			// 상대경로 : 현재 경로 기준으로 목적지 찾는 방식 (detail.jsp)
-			if(loginedMember != null) {
-				request.setAttribute("loginUser", loginedMember.getNickname());				
-			}
-			else {
-				request.setAttribute("loginUser", "");
-			}
 			
 			RequestDispatcher rd = request.getRequestDispatcher("/index.jsp");
 			rd.forward(request, response);			
@@ -91,18 +86,9 @@ public class FrontController extends HttpServlet {
 		else if(action.equals("showAdd.do")) {
 			
 			// 로그인 되어 있을 때만
-			if(loginedMember != null) {
-				RequestDispatcher rd = request.getRequestDispatcher("/addForm.jsp");
-				
-				request.setAttribute("loginUser", loginedMember.getNickname());
-				rd.forward(request, response);				
-			}
-			else {
-				// 에러페이지로 
-				request.setAttribute("errorMsg", "로그인을 해야 사용 가능합니다.");
-				RequestDispatcher rd = request.getRequestDispatcher("/error.jsp");
-				rd.forward(request, response);
-			}
+		
+			RequestDispatcher rd = request.getRequestDispatcher("/addForm.jsp");
+			rd.forward(request, response);				
 		}
 		else if(action.equals("add.do")) {
 			String title = request.getParameter("title");
@@ -145,9 +131,12 @@ public class FrontController extends HttpServlet {
 			
 			// 로그인 성공
 			if(m != null) {
-				loginedMember = m; 
-				request.setAttribute("loginUser", m.getNickname());
-					
+				
+				// session 저장소에 로그인 정보를 저장.
+				HttpSession session = request.getSession();
+				
+				session.setAttribute("loginUser", m.getNickname());				
+				
 				ArrayList<Article> articles = db.getArticleList();
 				request.setAttribute("articles", articles);
 				

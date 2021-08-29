@@ -1,3 +1,3 @@
 git add .
-git commit -m "로그인 데이터 유지 방법1"
+git commit -m "session에 데이터 저장하기"
 git push origin master
