@@ -14,8 +14,7 @@ import javax.servlet.http.HttpSession;
 
 @WebServlet("*.do")
 public class FrontController extends HttpServlet {
-	
-	Member loginedMember = null; // 로그인 정보 유지
+	DBUtil db = new DBUtil();
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
@@ -24,8 +23,6 @@ public class FrontController extends HttpServlet {
 		response.setCharacterEncoding("utf-8");
 		request.setCharacterEncoding("utf-8");
 		response.setContentType("text/html; charset=utf-8");
-
-		DBUtil db = new DBUtil();
 		
 		String uri = request.getRequestURI();
 		// split - 문자열을 구분자를 정해서 자를 수 있다.
@@ -34,151 +31,191 @@ public class FrontController extends HttpServlet {
 		String action = uriBits[2];
 		
 		if(action.equals("list.do")) {
-			ArrayList<Article> articles = db.getArticleList();
-			request.setAttribute("articles", articles);
-			
-			// 4. request에 데이터 세팅 후 jstlTest.jsp로 포워딩
-			
-			// 경로 :
-			// 절대경로 : root 경로를 기준으로 목적지 찾는 방식 (/detail.jsp)
-			// 상대경로 : 현재 경로 기준으로 목적지 찾는 방식 (detail.jsp)
-			
-			RequestDispatcher rd = request.getRequestDispatcher("/index.jsp");
-			rd.forward(request, response);			
+			list(request, response);		
 		}
 		else if(action.equals("detail.do")) {
-			String id = request.getParameter("id");
-			Article article = db.getArticleById(id);
-			ArrayList<Reply> replies = db.getArticleReplyByArticleId(article.getId());
-			
-			request.setAttribute("article", article);
-			request.setAttribute("replies", replies);
-			
-			RequestDispatcher rd = request.getRequestDispatcher("/detail.jsp");
-			rd.forward(request, response);
+			detail(request, response);
 		}
 		else if(action.equals("showUpdate.do")) {
-			String id = request.getParameter("id");
-			Article article = db.getArticleById(id);
-			request.setAttribute("article", article);
-			
-			RequestDispatcher rd = request.getRequestDispatcher("/updateForm.jsp");
-			rd.forward(request, response);
+			showUpdate(request, response);
 		}
 		else if(action.equals("update.do")) {
-			String title = request.getParameter("title");
-			String body = request.getParameter("body");
-			String id = request.getParameter("id");
-			
-			db.updateArticle(title, body, id);
-			
-			// 포워딩 : 요청 처리 위임. A에서 작업한 요청 결과를 B에 전달. B가 마무리.
-			// 리다이렉트 : 새로운 요청. A에서 작업한 결과 싹다 무시. B에 새로운 요청
-			
-			response.sendRedirect("/article/detail.do?id=" + id);
+			update(request, response);
 		}
 		else if(action.equals("delete.do")) {
-			
-			// 로그인 체크
-			
-			String id = request.getParameter("id");
-			
-			db.deleteArticle(id);
-			response.sendRedirect("/article/list.do");
+			delete(request, response);
 		}
 		else if(action.equals("showAdd.do")) {
-			
-			// 로그인 체크
-			
-			HttpSession session = request.getSession();
-			String user = (String)session.getAttribute("loginUser");
-			
-			if(user != null) {
-				RequestDispatcher rd = request.getRequestDispatcher("/addForm.jsp");
-				rd.forward(request, response);								
-			}
-			else {
-
-				RequestDispatcher rd = request.getRequestDispatcher("/error.jsp");
-				rd.forward(request, response);
-			}
-			
-		
+			showAdd(request, response);
 		}
 		else if(action.equals("add.do")) {
-			String title = request.getParameter("title");
-			String body = request.getParameter("body");
-			
-			db.addArticle(title, body);
-			response.sendRedirect("/article/list.do");
+			add(request, response);
 		}
 		else if(action.equals("addReply.do")) {
-			String rbody = request.getParameter("rbody");
-			String aid = request.getParameter("aid");
-			
-			db.addReply(rbody, aid);
-			
-			response.sendRedirect("/article/detail.do?id=" + aid);
+			addreply(request, response);
 		}
 		else if(action.equals("showMember.do")) {
-			RequestDispatcher rd = request.getRequestDispatcher("/addMemberForm.jsp");
-			rd.forward(request, response);
+			sendView(request, response, "/addMemberForm.jsp");
 		}
 		else if(action.equals("addMember.do")) {
-			String loginId = request.getParameter("loginId");
-			String loginPw = request.getParameter("loginPw");
-			String nickname = request.getParameter("nickname");
-			
-			db.addMember(loginId, loginPw, nickname);
-			response.sendRedirect("/article/list.do");
+			addMember(request, response);
 		}
 		else if(action.equals("showLogin.do")) {
-			RequestDispatcher rd = request.getRequestDispatcher("/loginForm.jsp");
-			rd.forward(request, response);
+			sendView(request, response, "/login.jsp");
 		}
 		else if(action.equals("login.do")) {
-			
-			// 로그인을 시도하는 유저의 로그인 정보를 파라미터로 받아서 DB에 있는지 체크
-			String loginId = request.getParameter("loginId");
-			String loginPw = request.getParameter("loginPw");
-			
-			Member m = db.getMemberByLoginIdAndLoginPw(loginId, loginPw);
-			
-			// 로그인 성공
-			if(m != null) {
-				
-				// request 저장소는 하나의 요청 처리에 대해 동일한 데이터를 저장하고 제공한다.				
-				// session 저장소는 모든 요청 처리에 대해 동일한 데이터를 저장하고 제공한다.
-				
-				// session 저장소에 로그인 정보를 저장.
-				HttpSession session = request.getSession();
-				session.setAttribute("loginUser", m.getNickname());				
-				
-				ArrayList<Article> articles = db.getArticleList();
-				request.setAttribute("articles", articles);
-				
-				RequestDispatcher rd = request.getRequestDispatcher("/index.jsp");
-				rd.forward(request, response);
-				
-			}
-			// 로그인 실패
-			else {
-				request.setAttribute("errorMsg", "로그인 실패. 잘못된 회원정보입니다.");
-				
-				RequestDispatcher rd = request.getRequestDispatcher("/error.jsp");
-				rd.forward(request, response); 
-			}
+			login(request, response);
 		}
 		else if(action.equals("logout.do")) {
-			HttpSession session = request.getSession();
-			session.invalidate(); // session에 저장된 모든 데이터 삭제
-			
-			ArrayList<Article> articles = db.getArticleList();
-			request.setAttribute("articles", articles);
-			
-			RequestDispatcher rd = request.getRequestDispatcher("/index.jsp");
-			rd.forward(request, response);
+			logout(request, response);
 		}
 	}
 
+	private void logout(HttpServletRequest request, HttpServletResponse response) {
+		HttpSession session = request.getSession();
+		session.invalidate(); // session에 저장된 모든 데이터 삭제
+		
+		ArrayList<Article> articles = db.getArticleList();
+		request.setAttribute("articles", articles);
+		
+		sendView(request, response, "/index.jsp");
+	}
+
+	private void login(HttpServletRequest request, HttpServletResponse response) {
+
+		// 로그인을 시도하는 유저의 로그인 정보를 파라미터로 받아서 DB에 있는지 체크
+		String loginId = request.getParameter("loginId");
+		String loginPw = request.getParameter("loginPw");
+		
+		Member m = db.getMemberByLoginIdAndLoginPw(loginId, loginPw);
+		
+		// 로그인 성공
+		if(m != null) {
+			
+			// request 저장소는 하나의 요청 처리에 대해 동일한 데이터를 저장하고 제공한다.				
+			// session 저장소는 모든 요청 처리에 대해 동일한 데이터를 저장하고 제공한다.
+			
+			// session 저장소에 로그인 정보를 저장.
+			HttpSession session = request.getSession();
+			session.setAttribute("loginUser", m.getNickname());				
+			
+			ArrayList<Article> articles = db.getArticleList();
+			request.setAttribute("articles", articles);
+			
+			sendView(request, response, "/index.jsp");
+			
+		}
+		// 로그인 실패
+		else {
+			request.setAttribute("errorMsg", "로그인 실패. 잘못된 회원정보입니다.");
+			
+			sendView(request, response, "/error.jsp");
+		}
+		
+	}
+
+	private void addMember(HttpServletRequest request, HttpServletResponse response) {
+		String loginId = request.getParameter("loginId");
+		String loginPw = request.getParameter("loginPw");
+		String nickname = request.getParameter("nickname");
+		
+		db.addMember(loginId, loginPw, nickname);
+		redirectView(response, "/article/list.do");
+	}
+
+	private void showAdd(HttpServletRequest request, HttpServletResponse response) {
+		HttpSession session = request.getSession();
+		String user = (String)session.getAttribute("loginUser");
+		
+		if(user != null) {
+			sendView(request, response, "/addForm.jsp");			
+		}
+		else {
+
+			sendView(request, response, "/error.jsp");
+		}		
+	}
+
+	private void addreply(HttpServletRequest request, HttpServletResponse response) {
+		String rbody = request.getParameter("rbody");
+		String aid = request.getParameter("aid");
+		
+		db.addReply(rbody, aid);
+		
+		redirectView(response, "/article/detail.do?id=" + aid);
+		
+	}
+
+	private void delete(HttpServletRequest request, HttpServletResponse response) {
+		
+		String id = request.getParameter("id");
+		
+		db.deleteArticle(id);
+		redirectView(response, "/article/list.do");
+		
+	}
+
+	private void add(HttpServletRequest request, HttpServletResponse response) {
+		String title = request.getParameter("title");
+		String body = request.getParameter("body");
+		
+		db.addArticle(title, body);
+		redirectView(response, "/article/list.do");
+	}
+
+	private void update(HttpServletRequest request, HttpServletResponse response) {
+		String title = request.getParameter("title");
+		String body = request.getParameter("body");
+		String id = request.getParameter("id");
+		
+		db.updateArticle(title, body, id);
+		redirectView(response, "/article/detail.do?id=" + id);
+		
+	}
+
+	private void showUpdate(HttpServletRequest request, HttpServletResponse response) {
+		String id = request.getParameter("id");
+		Article article = db.getArticleById(id);
+		request.setAttribute("article", article);
+		
+		sendView(request, response, "/updateForm.jsp");
+	}
+
+	private void detail(HttpServletRequest request, HttpServletResponse response) {
+		String id = request.getParameter("id");
+		Article article = db.getArticleById(id);
+		ArrayList<Reply> replies = db.getArticleReplyByArticleId(article.getId());
+		
+		request.setAttribute("article", article);
+		request.setAttribute("replies", replies);
+		
+		sendView(request, response, "/detail.jsp");
+	}
+
+	private void list(HttpServletRequest request, HttpServletResponse response) {
+		ArrayList<Article> articles = db.getArticleList();
+		request.setAttribute("articles", articles);
+		
+		sendView(request, response, "/index.jsp");
+	}
+
+	public void sendView(HttpServletRequest request, HttpServletResponse response, String path) {
+		
+		try {
+			RequestDispatcher rd = request.getRequestDispatcher(path);
+			rd.forward(request, response);			
+		} catch(Exception e) {
+			System.out.println("포워딩 중 문제 발생!");
+		}
+	}
+	
+	public void redirectView(HttpServletResponse response, String path) {
+		
+		try {
+			response.sendRedirect(path);			
+		} catch(Exception e) {
+			System.out.println("리다이렉트 중 문제 발생!");
+		}
+	}
+	
 }

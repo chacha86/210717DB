@@ -1,3 +1,3 @@
 git add .
-git commit -m "로그인 필터 만들기"
+git commit -m "FrontController 리팩토링"
 git push origin master
