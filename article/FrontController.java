@@ -55,13 +55,13 @@ public class FrontController extends HttpServlet {
 			addreply(request, response);
 		}
 		else if(action.equals("showMember.do")) {
-			sendView(request, response, "/addMemberForm.jsp");
+			sendView(request, response, "/jsp/article/addMemberForm.jsp");
 		}
 		else if(action.equals("addMember.do")) {
 			addMember(request, response);
 		}
 		else if(action.equals("showLogin.do")) {
-			sendView(request, response, "/login.jsp");
+			sendView(request, response, "/jsp/member/loginForm.jsp");
 		}
 		else if(action.equals("login.do")) {
 			login(request, response);
@@ -78,7 +78,7 @@ public class FrontController extends HttpServlet {
 		ArrayList<Article> articles = db.getArticleList();
 		request.setAttribute("articles", articles);
 		
-		sendView(request, response, "/index.jsp");
+		sendView(request, response, "/jsp/article/index.jsp");
 	}
 
 	private void login(HttpServletRequest request, HttpServletResponse response) {
@@ -102,14 +102,14 @@ public class FrontController extends HttpServlet {
 			ArrayList<Article> articles = db.getArticleList();
 			request.setAttribute("articles", articles);
 			
-			sendView(request, response, "/index.jsp");
+			sendView(request, response, "/jsp/article/index.jsp");
 			
 		}
 		// 로그인 실패
 		else {
 			request.setAttribute("errorMsg", "로그인 실패. 잘못된 회원정보입니다.");
 			
-			sendView(request, response, "/error.jsp");
+			sendView(request, response, "/jsp/article/error.jsp");
 		}
 		
 	}
@@ -128,11 +128,11 @@ public class FrontController extends HttpServlet {
 		String user = (String)session.getAttribute("loginUser");
 		
 		if(user != null) {
-			sendView(request, response, "/addForm.jsp");			
+			sendView(request, response, "/jsp/article/addForm.jsp");			
 		}
 		else {
 
-			sendView(request, response, "/error.jsp");
+			sendView(request, response, "/jsp/article/error.jsp");
 		}		
 	}
 
@@ -178,7 +178,7 @@ public class FrontController extends HttpServlet {
 		Article article = db.getArticleById(id);
 		request.setAttribute("article", article);
 		
-		sendView(request, response, "/updateForm.jsp");
+		sendView(request, response, "/jsp/article/updateForm.jsp");
 	}
 
 	private void detail(HttpServletRequest request, HttpServletResponse response) {
@@ -189,14 +189,14 @@ public class FrontController extends HttpServlet {
 		request.setAttribute("article", article);
 		request.setAttribute("replies", replies);
 		
-		sendView(request, response, "/detail.jsp");
+		sendView(request, response, "/jsp/article/detail.jsp");
 	}
 
 	private void list(HttpServletRequest request, HttpServletResponse response) {
 		ArrayList<Article> articles = db.getArticleList();
 		request.setAttribute("articles", articles);
 		
-		sendView(request, response, "/index.jsp");
+		sendView(request, response, "/jsp/article/index.jsp");
 	}
 
 	public void sendView(HttpServletRequest request, HttpServletResponse response, String path) {
