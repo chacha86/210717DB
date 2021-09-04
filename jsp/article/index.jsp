@@ -45,24 +45,39 @@
 <h1>게시물 목록</h1>
 
 <body>
-	<div class="col">번호</div>
-	<div class="col title">제목</div>
-	<div class="col">작성자</div>
-	<div class="col regDate">작성일</div>
-	<div class="col">조회수</div>
-	<div class="col">좋아요</div>
-	<hr>
-   <c:forEach items="${articles}" var="article">
-	<div>
-		<div class="col">${article.id}</div>
-		<div class="col title"><a href="/article/detail.do?id=${article.id}">${article.title}[${article.rcnt}]</a></div>
-		<div class="col">${article.nickname}</div>
-		<div class="col regDate">${article.regDate}</div>
-		<div class="col">${article.hit}</div>
-		<div class="col">0</div>
-	</div>
-	<hr>
-    </c:forEach>
-	<a href="/article/showAdd.do">글쓰기</a>
+    <div>
+     	<div class="col">번호</div>
+     	<div class="col title">제목</div>
+     	<div class="col">작성자</div>
+     	<div class="col regDate">작성일</div>
+     	<div class="col">조회수</div>
+     	<div class="col">좋아요</div>
+     	<hr>
+        <c:forEach items="${articles}" var="article">
+     	<div>
+     		<div class="col">${article.id}</div>
+     		<div class="col title"><a href="/article/detail.do?id=${article.id}">${article.title}[${article.rcnt}]</a></div>
+     		<div class="col">${article.nickname}</div>
+     		<div class="col regDate">${article.regDate}</div>
+     		<div class="col">${article.hit}</div>
+     		<div class="col">0</div>
+     	</div>
+     	<hr>
+         </c:forEach>
+     	<a href="/article/showAdd.do">글쓰기</a>
+    </div>
+    <div>
+       <c:forEach var="pageNum" begin="1" end="10">
+         <c:choose>
+           <c:when test="${ pageNum == currentPageNum}">
+             <a href="/article/list.do?pageNum=${ pageNum }">[${ pageNum }]</a>    
+           </c:when>
+           <c:otherwise>
+             <a href="/article/list.do?pageNum=${ pageNum }">${ pageNum }</a>   
+           </c:otherwise>
+         </c:choose>
+         
+       </c:forEach>
+    </div>
 </body>
 </html>

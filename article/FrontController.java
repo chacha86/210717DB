@@ -75,7 +75,7 @@ public class FrontController extends HttpServlet {
 		HttpSession session = request.getSession();
 		session.invalidate(); // session에 저장된 모든 데이터 삭제
 		
-		ArrayList<Article> articles = db.getArticleList();
+		ArrayList<Article> articles = db.getArticleList(1);
 		request.setAttribute("articles", articles);
 		
 		sendView(request, response, "/jsp/article/index.jsp");
@@ -99,7 +99,7 @@ public class FrontController extends HttpServlet {
 			HttpSession session = request.getSession();
 			session.setAttribute("loginUser", m.getNickname());				
 			
-			ArrayList<Article> articles = db.getArticleList();
+			ArrayList<Article> articles = db.getArticleList(1);
 			request.setAttribute("articles", articles);
 			
 			sendView(request, response, "/jsp/article/index.jsp");
@@ -193,8 +193,15 @@ public class FrontController extends HttpServlet {
 	}
 
 	private void list(HttpServletRequest request, HttpServletResponse response) {
-		ArrayList<Article> articles = db.getArticleList();
+		int pageNum = 1; // default page 번호
+		
+		if(request.getParameter("pageNum") != null) {
+			 pageNum = Integer.parseInt(request.getParameter("pageNum"));			
+		}
+				
+		ArrayList<Article> articles = db.getArticleList(pageNum);
 		request.setAttribute("articles", articles);
+		request.setAttribute("currentPageNum", pageNum);
 		
 		sendView(request, response, "/jsp/article/index.jsp");
 	}

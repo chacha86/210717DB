@@ -1,3 +1,3 @@
 git add .
-git commit -m "FrontController ¸®ÆÑÅä¸µ2"
+git commit -m "ÆäÀÌÂ¡1"
 git push origin master

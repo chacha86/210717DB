@@ -29,16 +29,19 @@ public class DBUtil {
 	}
 
 	// 1. 게시물 목록
-	public ArrayList<Article> getArticleList() {
+	public ArrayList<Article> getArticleList(int pageNum) {
 		ArrayList<Article> articles = new ArrayList<Article>();
 
 		try {
+			
 			Connection conn = getConnection();
 			Statement stmt = conn.createStatement();
 
+			int index = (pageNum - 1) * 5;
+			
 			String sql = "SELECT a.*, m.nickname, COUNT(ar.id) rcnt " + "FROM article a " + "INNER JOIN `member` m "
 					+ "ON a.memberId = m.id " + "LEFT OUTER JOIN articleReply ar " + "ON a.id = ar.parentId "
-					+ "GROUP BY a.id";
+					+ "GROUP BY a.id LIMIT " + index + ", 5";
 			ResultSet rs = stmt.executeQuery(sql);
 
 			while (rs.next()) {
