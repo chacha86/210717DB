@@ -14,7 +14,9 @@ import javax.servlet.http.HttpSession;
 
 @WebServlet("*.do")
 public class FrontController extends HttpServlet {
+
 	DBUtil db = new DBUtil();
+	Pagination pagination = new Pagination(10, 5, db.getTotalCountOfArticles());
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
@@ -75,10 +77,7 @@ public class FrontController extends HttpServlet {
 		HttpSession session = request.getSession();
 		session.invalidate(); // session에 저장된 모든 데이터 삭제
 		
-		ArrayList<Article> articles = db.getArticleList(1);
-		request.setAttribute("articles", articles);
-		
-		sendView(request, response, "/jsp/article/index.jsp");
+		redirectView(response, "/article/list.do");
 	}
 
 	private void login(HttpServletRequest request, HttpServletResponse response) {
@@ -99,17 +98,14 @@ public class FrontController extends HttpServlet {
 			HttpSession session = request.getSession();
 			session.setAttribute("loginUser", m.getNickname());				
 			
-			ArrayList<Article> articles = db.getArticleList(1);
-			request.setAttribute("articles", articles);
-			
-			sendView(request, response, "/jsp/article/index.jsp");
+			redirectView(response, "/article/list.do");
 			
 		}
 		// 로그인 실패
 		else {
 			request.setAttribute("errorMsg", "로그인 실패. 잘못된 회원정보입니다.");
 			
-			sendView(request, response, "/jsp/article/error.jsp");
+			sendView(request, response, "/jsp/error/error.jsp");
 		}
 		
 	}
@@ -193,15 +189,13 @@ public class FrontController extends HttpServlet {
 	}
 
 	private void list(HttpServletRequest request, HttpServletResponse response) {
-		int pageNum = 1; // default page 번호
-		
 		if(request.getParameter("pageNum") != null) {
-			 pageNum = Integer.parseInt(request.getParameter("pageNum"));			
+			pagination.setCurrentPageNo(Integer.parseInt(request.getParameter("pageNum")));
 		}
-				
-		ArrayList<Article> articles = db.getArticleList(pageNum);
+		pagination.setTotalCountOfItems(db.getTotalCountOfArticles());
+		ArrayList<Article> articles = db.getArticleList(pagination);
 		request.setAttribute("articles", articles);
-		request.setAttribute("currentPageNum", pageNum);
+		request.setAttribute("page", pagination);
 		
 		sendView(request, response, "/jsp/article/index.jsp");
 	}

@@ -29,7 +29,7 @@ public class DBUtil {
 	}
 
 	// 1. 게시물 목록
-	public ArrayList<Article> getArticleList(int pageNum) {
+	public ArrayList<Article> getArticleList(Pagination pagination) {
 		ArrayList<Article> articles = new ArrayList<Article>();
 
 		try {
@@ -37,7 +37,7 @@ public class DBUtil {
 			Connection conn = getConnection();
 			Statement stmt = conn.createStatement();
 
-			int index = (pageNum - 1) * 5;
+			int index = (pagination.getCurrentPageNo() - 1) * pagination.getItemCountPerPage();
 			
 			String sql = "SELECT a.*, m.nickname, COUNT(ar.id) rcnt " + "FROM article a " + "INNER JOIN `member` m "
 					+ "ON a.memberId = m.id " + "LEFT OUTER JOIN articleReply ar " + "ON a.id = ar.parentId "
@@ -243,6 +243,27 @@ public class DBUtil {
 		}
 		
 		return m;
+	}
+	
+	// 11. 전체 게시물 수 가져오기
+	public int getTotalCountOfArticles() {
+		int totalCount = 0;
+		
+		try {
+			Connection conn = getConnection();
+			Statement stmt = conn.createStatement();
+			
+			String sql = "SELECT count(*) "
+					   + "FROM article ";
+			ResultSet rs = stmt.executeQuery(sql);
+			if(rs.next()) {
+				totalCount = rs.getInt(1);
+			}
+		} catch(Exception e) {
+			System.out.println("전체 게시물 가져오기 sql 수행중 문제 발생!");
+		}
+		
+		return totalCount;
 	}
 	
 }

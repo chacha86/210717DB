@@ -67,17 +67,22 @@
      	<a href="/article/showAdd.do">글쓰기</a>
     </div>
     <div>
-       <c:forEach var="pageNum" begin="1" end="10">
-         <c:choose>
-           <c:when test="${ pageNum == currentPageNum}">
-             <a href="/article/list.do?pageNum=${ pageNum }">[${ pageNum }]</a>    
-           </c:when>
-           <c:otherwise>
-             <a href="/article/list.do?pageNum=${ pageNum }">${ pageNum }</a>   
-           </c:otherwise>
-         </c:choose>
-         
+		<c:if test="${ page.currentPageBlock != 1 }">
+    		<a href="/article/list.do?pageNum=${ page.startNoInBlock - 1 }">이전</a>
+		</c:if>    
+		<c:forEach var="pageNum" begin="${ page.startNoInBlock }" end="${ page.endNoInBlock }">
+		  <c:choose>
+		    <c:when test="${ pageNum == page.currentPageNo}">
+		      <a href="/article/list.do?pageNum=${ pageNum }">[${ pageNum }]</a>    
+		    </c:when>
+		    <c:otherwise>
+		      <a href="/article/list.do?pageNum=${ pageNum }">${ pageNum }</a>   
+		    </c:otherwise>
+		  </c:choose>
        </c:forEach>
+       <c:if test="${ page.currentPageBlock < page.lastBlockNo }">
+       		<a href="/article/list.do?pageNum=${ page.endNoInBlock + 1 }">다음</a>
+       </c:if>
     </div>
 </body>
 </html>

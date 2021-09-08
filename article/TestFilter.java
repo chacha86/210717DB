@@ -28,7 +28,7 @@ public class TestFilter implements Filter {
 		// 2. 로그인 X
 		if(user == null) {
 			request.setAttribute("errorMsg", "로그인 하지 않았습니다.");
-			RequestDispatcher rd = httpRequest.getRequestDispatcher("/error.jsp");
+			RequestDispatcher rd = httpRequest.getRequestDispatcher("/jsp/error/error.jsp");
 			rd.forward(request, response);
 			return;
 		}
